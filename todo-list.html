@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO-LIST</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="app vh-100">
+        <div class="wrapper">
+            <h1>TODO LIST</h1>
+            <div class="form-wrapp">
+                <div class="o-fomr">
+                    <input type="text" maxlength=20 id="input-text" v-model="TextNewItem" @Keyup.enter="SaveNewItem">
+                </div>
+                <div>
+                    <input type="checkbox" name="" class="item.importante" v-model="NewItemImportant">
+                    <label for="is-importante">Importante</label><br>
+                    <p id="contagem">{{qtdTyped}}/20</p>
+                </div>
+                <button v-on:click="SaveNewItem" id="button-default" v-if="TextNewItem.length > 0">
+                    Salvar
+                </button>
+            </div>
+        </div>
+        <div id="list-wrapper">
+            <div class="item" v-bind:class="{importante: item.importante, feito: item.feito}" v-for="item in lista"
+                v-on:click="item.feito = !item.feito" :key="item.id">
+                <p class="texto-item">{{item.text}}</p>
+            </div>
+        </div>
+
+    </div>
+    <script src="https://unpkg.com/vue@3.0.0-rc.5/dist/vue.global.js"></script>
+    <script>
+        Vue.createApp({
+            methods: {
+                SaveNewItem() {
+                    if (this.TextNewItem.length > 0) {
+                        let NewItem = {
+                            id: new Date().getTime(),
+                            text: this.TextNewItem,
+                            importante: this.NewItemImportant,
+                            feito: false
+                        };
+                        this.lista.push(NewItem);
+                        this.TextNewItem = "";
+                        this.NewItemImportant = "";
+                    }
+                }
+            },
+            data() {
+                return {
+                    TextNewItem: "",
+                    NewItemImportant: false,
+                    lista: []
+                }
+            },
+            computed: {
+                qtdTyped() {
+                    return this.TextNewItem.length;
+                }
+            }
+        }).mount(".app")
+    </script>
+</body>
+
+</html>
